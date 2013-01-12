@@ -60,8 +60,11 @@ int main(void) {
 	DDRA &= ~(1 << PINA6); // Pin 7 - Trigger Pin 2
 
 	// Other unknown pins
+	//DDRA |= (1 << PINA0); // Pin 13
 	//PORTA |= (1 << PINA0); // 13 - HIGH
-	//PORTA |= (1 << PINA3); // 10 - HIGH
+
+	DDRA |= (1 << PINA3); // Pin 10 - Power pin
+	PORTA |= (1 << PINA3); // 10 - HIGH
 	//PORTA &= ~(1 << PINA4);	// 9 - LOW
 	//PORTA &= ~(1 << PINA5);	// 8 - LOW
 	

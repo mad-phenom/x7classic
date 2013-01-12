@@ -46,6 +46,14 @@ void pushbutton_run(volatile uint32_t *millis) {
 			pushbutton_indicatorTime = (*millis);
         }
 
+	    // This is used to power down the X7 classic
+		if (((*millis) - pushbutton_activeTime) > 5000) {
+			// Power down
+			//PORTA &= ~(1 << PINA0); // 13 - LOW
+			PORTA &= ~(1 << PINA3); // 10 - LOW
+		}
+
+
         pushbutton_down       = false;
         pushbutton_activeTime = (*millis);
         redOff();

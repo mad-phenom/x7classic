@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "mad-phenom", "mad-phenom\mad-phenom.cproj", "{48BEB32D-6183-42B3-8AC8-EC6E370F380A}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "x7classic", "x7classic\x7classic.cproj", "{48BEB32D-6183-42B3-8AC8-EC6E370F380A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
