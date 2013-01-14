@@ -74,11 +74,15 @@ int main(void) {
 	
 	// Set Pushbutton HIGH
 	PORTB |= (1 << PINB1);
+
+	// Selector switch on pin 2
+	DDRB &= ~(1 << PINB0); // Pin 2
+	PORTB |= (1 << PINB0); // Pin 2 set HIGH
 	
 	// If the button is held during startup, enter config mode.
 	uint16_t buttonHeldTime = 0;
 	bool configMode = false;
-	while (pushButtonHasInput()) {
+	while ((PINB & (1 << PINB1)) <= 0) {
 		delay_ms(1);
 		
 		buttonHeldTime++;
@@ -108,12 +112,14 @@ int main(void) {
 }
 
 ISR(PCINT1_vect) {
-	if (!triggerPulled && triggerHeld()) {
+
+	if (!triggerPulled
+		&& (((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0))) { // Trigger Held
 		triggerPulled = true;
 
 		uint16_t buttonHeldTime = 0;
 		delay_ms(PULL_DEBOUNCE);
-		while (triggerHeld()) {
+		while ((((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0))) { // Trigger Held
 			delay_ms(1);
 			buttonHeldTime += 1;
 			
@@ -124,7 +130,8 @@ ISR(PCINT1_vect) {
 		configTriggerPulled(buttonHeldTime);
 	}
 
-	if (triggerPulled && triggerReleased()) {		
+	if (triggerPulled
+	    && (((PINB & (1 << PINB2)) > 0) && ((PINA & (1 << PINA6)) > 0))) { // && triggerReleased()) {
 		delay_ms(RELEASE_DEBOUNCE);
 		triggerPulled = false;
 	}
