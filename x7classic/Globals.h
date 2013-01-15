@@ -90,4 +90,7 @@ extern uint8_t DWELL;
 extern uint8_t shotsFired;
 
 extern uint8_t currentSelector;
+
+extern volatile uint32_t millis;
+
 #endif

@@ -75,3 +75,5 @@ uint8_t DWELL;
 
 uint8_t shotsFired;
 uint8_t currentSelector;
+
+volatile uint32_t millis = 0;

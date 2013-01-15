@@ -26,9 +26,7 @@ along with mad-phenom.  If not, see <http://www.gnu.org/licenses/>.
 #include "Trigger.h"
 #include "PushButton.h"
 
-volatile uint32_t millis = 0;
 uint8_t counter = 0;
-bool triggerPulled = false;
 
 // This interrupt should occur approx. 3906 times per second
 // divide by 4 to get an approx millisecond
@@ -96,12 +94,11 @@ int main(void) {
 	}
 	
 	if (configMode) {
-		// Initialize interrupts for the menu system
-		PCMSK1 |= (1 << PCINT10);  //Enable interrupts on PCINT10 (trigger)
-		PCMSK1 |= (1 << PCINT9);  // Enable interrupts for the push button
-		GIMSK = (1 << PCIE1);    //Enable interrupts period for PCI0 (PCINT11:8
-		
-		handleConfig();	
+		// Enter the configuration menu
+		currentSelector = 0;
+		for (;;) {
+			configMenu_run(&millis);
+		}			
 	} else { // Normal run mode
 		for (;;) {
 			// This prevents time from changing within an iteration
@@ -111,6 +108,7 @@ int main(void) {
 	}		
 }
 
+/*
 ISR(PCINT1_vect) {
 
 	if (!triggerPulled
@@ -136,3 +134,4 @@ ISR(PCINT1_vect) {
 		triggerPulled = false;
 	}
 }
+*/

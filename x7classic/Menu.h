@@ -17,9 +17,10 @@ along with mad-phenom.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MENU_H_
 #define MENU_H_
 
-void handleConfig();
-void successBlink();
-void failureBlink();
-void configTriggerPulled(uint32_t buttonHeldTime);
+//void handleConfig();
+//void successBlink();
+//void failureBlink();
+//void configTriggerPulled(uint32_t buttonHeldTime);
+void configMenu_run(volatile uint32_t *millis);
 
 #endif /* MENU_H_ */
