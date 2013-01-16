@@ -28,7 +28,6 @@ bool pushbutton_indicatorOn = false;
 void pushbutton_run(volatile uint32_t *millis) {
 	
 	bool pastDebounce = ((*millis) - pushbutton_activeTime) > PULL_DEBOUNCE;
-	uint16_t indicatorActiveTime = ((*millis) - pushbutton_indicatorTime);
 
 	// Check if the push button was pushed
 	if (!pushbutton_down && pushButtonHasInput() && pastDebounce) {
@@ -62,7 +61,7 @@ void pushbutton_run(volatile uint32_t *millis) {
 	}
 	
 	// This code will turn the green LED on and off to signify which preset is active
-	if (!pushbutton_indicatorOn && ((*millis) - pushbutton_indicatorTime) > 200 && pushbutton_currentBlink < (CURRENT_PRESET + 1)) {
+	if (!pushbutton_indicatorOn && ((*millis) - pushbutton_indicatorTime) > 200 && pushbutton_currentBlink < (CURRENT_PRESET[currentSelector] + 1)) {
 
 		if (AMMO_LIMIT > 0 && shotsFired >= AMMO_LIMIT) {
 			redOn();
@@ -81,7 +80,7 @@ void pushbutton_run(volatile uint32_t *millis) {
 		pushbutton_indicatorTime = (*millis);
 	}
 	
-	if (!pushbutton_indicatorOn && ((*millis) - pushbutton_indicatorTime) > 1000 && pushbutton_currentBlink >= (CURRENT_PRESET + 1)) {
+	if (!pushbutton_indicatorOn && ((*millis) - pushbutton_indicatorTime) > 1000 && pushbutton_currentBlink >= (CURRENT_PRESET[currentSelector] + 1)) {
 		pushbutton_currentBlink = 0;
 	}
 
