@@ -38,6 +38,18 @@ void pushbutton_run(volatile uint32_t *millis) {
 		greenOff();
 	}
 	
+	if (pushbutton_down
+		&& pushButtonHasInput() // Trigger Held
+		&& pastDebounce) {
+
+		// This is used to power down the X7 classic
+		if (((*millis) - pushbutton_activeTime) > 5000) {
+			// Power down
+			//PORTA &= ~(1 << PINA0); // 13 - LOW
+			PORTA &= ~(1 << PINA3); // 10 - LOW
+		}
+	}
+
 	// Has the pushbutton been released? ()
 	if (pushbutton_down && !pushButtonHasInput() && pastDebounce) {
 		if (((*millis) - pushbutton_activeTime) > 100) {
@@ -46,14 +58,6 @@ void pushbutton_run(volatile uint32_t *millis) {
 			pushbutton_indicatorOn   = false;
 			pushbutton_indicatorTime = (*millis);
 		}
-
-		// This is used to power down the X7 classic
-		if (((*millis) - pushbutton_activeTime) > 5000) {
-			// Power down
-			//PORTA &= ~(1 << PINA0); // 13 - LOW
-			PORTA &= ~(1 << PINA3); // 10 - LOW
-		}
-
 
 		pushbutton_down       = false;
 		pushbutton_activeTime = (*millis);

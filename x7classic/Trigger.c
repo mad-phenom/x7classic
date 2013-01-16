@@ -32,7 +32,6 @@ uint8_t firing_queue = 0;
 //void trigger_autoResponse(uint32_t *millis);
 //void trigger_burst(uint32_t *millis);
 //void fireFromQueue(uint32_t *millis);
-void trigger_action(uint32_t *millis);
 
 //bool triggerHeld() {
 //	return ((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0);
@@ -41,10 +40,6 @@ void trigger_action(uint32_t *millis);
 //bool triggerReleased() {
 //	return (((PINB & (1 << PINB2)) > 0) && ((PINA & (1 << PINA6)) > 0));
 //}
-
-void trigger_run(uint32_t *millis) {
-	trigger_action(millis);
-}
 
 //bool checkPullDebounce(uint32_t *millis) {
 //	return (((*millis) - trigger_activeTime) >= PULL_DEBOUNCE);
@@ -59,10 +54,12 @@ void trigger_run(uint32_t *millis) {
 //	trigger_pulled = false;
 //}
 
-void trigger_action(uint32_t *millis) {
+void trigger_run(uint32_t *millis) {
 	
 	//////// TRIGGER PULLED
 	
+	bool pastPullDebounce = (((*millis) - trigger_activeTime) >= PULL_DEBOUNCE);
+
 	// NOTE: Burst originally used checkPullDebounce()
 	if (!trigger_pulled
 		&& (((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0)) // Trigger Held
@@ -97,7 +94,7 @@ void trigger_action(uint32_t *millis) {
 	// Trigger Held
 	if (trigger_pulled
 		&& (((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0)) // Trigger Held
-		&& (((*millis) - trigger_activeTime) >= PULL_DEBOUNCE) // checkPullDebounce(millis)
+		&& pastPullDebounce // checkPullDebounce(millis)
 		&& (((*millis) - trigger_activeTime) >= ROUND_DELAY)) {
 		
 		switch (FIRING_MODE) {
@@ -134,7 +131,7 @@ void trigger_action(uint32_t *millis) {
 	// Trigger Release
 	if (trigger_pulled
 		&& (((PINB & (1 << PINB2)) > 0) && ((PINA & (1 << PINA6)) > 0)) // triggerReleased()
-		&& (((*millis) - trigger_activeTime) >= PULL_DEBOUNCE)) { //checkPullDebounce(millis)) {
+		&& pastPullDebounce) { //checkPullDebounce(millis)) {
 
 		trigger_pulled = false;
 		trigger_activeTime = (*millis);

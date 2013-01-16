@@ -112,12 +112,24 @@ int main(void) {
 }
 
 ISR(PCINT1_vect) {
+	uint16_t buttonHeldTime = 0;
+
+	while ((PINB & (1 << PINB1)) <= 0) {
+		delay_ms(1);
+
+		buttonHeldTime++;
+		if (buttonHeldTime > 5000) {
+			// Power down
+			PORTA &= ~(1 << PINA3);
+		}
+	}
+
+	buttonHeldTime = 0;
 
 	if (!triggerPulled
 		&& (((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0))) { // Trigger Held
 		triggerPulled = true;
 
-		uint16_t buttonHeldTime = 0;
 		delay_ms(PULL_DEBOUNCE);
 		while ((((PINB & (1 << PINB2)) <= 0) || ((PINA & (1 << PINA6)) <= 0))) { // Trigger Held
 			delay_ms(1);
