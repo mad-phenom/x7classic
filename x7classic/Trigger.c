@@ -24,7 +24,7 @@ uint32_t trigger_heldTime = 0;
 uint32_t queue_activeTime = 0;
 uint32_t lastTriggerPullTime = 0;
 uint8_t safetyShotsFired = 0;
-uint8_t trigger_pulled = false;
+bool trigger_pulled = false;
 uint8_t firing_queue = 0;
 
 //void trigger_singleShot(uint32_t *millis);
@@ -54,7 +54,7 @@ uint8_t firing_queue = 0;
 //	trigger_pulled = false;
 //}
 
-void trigger_run(uint32_t *millis) {
+void trigger_run(volatile uint32_t *millis) {
 	
 	//////// TRIGGER PULLED
 	
@@ -117,14 +117,7 @@ void trigger_run(uint32_t *millis) {
 			default:
 				// Nothing while trigger is held
 				break;
-		}
-		
-		// If AMMO LIMIT is enabled and the trigger is held down for more than 2 seconds, reset the ammo limit
-		// For now, I'm leaving this enabled for full-auto as well (we'll see how the user feedback goes).
-		if (AMMO_LIMIT > 0 && shotsFired >= AMMO_LIMIT && ((*millis) - trigger_heldTime) >= 2000) {
-			// Reset the ammo limit
-			shotsFired = 0;
-		}
+		}		
 	}
 	
 	//////// TRIGGER RELEASED
@@ -148,6 +141,13 @@ void trigger_run(uint32_t *millis) {
 				}
 			}
 		}
+		
+		// If AMMO LIMIT is enabled and the trigger is held down for more than 2 seconds, reset the ammo limit
+		// For now, I'm leaving this enabled for full-auto as well (we'll see how the user feedback goes).
+		if (AMMO_LIMIT > 0 && shotsFired >= AMMO_LIMIT && ((*millis) - trigger_heldTime) >= 2000) {
+			// Reset the ammo limit
+			shotsFired = 0;
+		}		
 	}
 
 	// FIRE!!!
